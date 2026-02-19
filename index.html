@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kevin Mark | Private Estate</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+/* =========================
+   DESIGN SYSTEM
+========================= */
+
+:root{
+  --bg-primary:#0b0b0b;
+  --bg-secondary:#111111;
+  --accent:#c6a84f;
+  --accent-soft:rgba(198,168,79,0.15);
+  --text-primary:#e8e3d9;
+  --text-muted:rgba(232,227,217,0.65);
+  --radius-lg:28px;
+  --transition-smooth:all .5s cubic-bezier(.16,.84,.44,1);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  scroll-behavior:smooth;
+  cursor:none;
+}
+
+body{
+  font-family:'Cormorant Garamond', serif;
+  background:linear-gradient(to bottom, #121212 0%, var(--bg-primary) 40%);
+  color:var(--text-primary);
+  line-height:1.75;
+  overflow-x:hidden;
+}
+
+/* PRELOADER */
+#loader{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:var(--bg-primary);
+  font-family:'Playfair Display', serif;
+  letter-spacing:6px;
+  font-size:26px;
+  color:var(--accent);
+  z-index:9999;
+  transition:opacity 1.4s ease;
+}
+
+/* SCROLL PROGRESS */
+#progress{
+  position:fixed;
+  top:0;
+  left:0;
+  height:2px;
+  width:0%;
+  background:linear-gradient(to right,var(--accent),#fff1b5);
+  z-index:2000;
+}
+
+/* NAV */
+nav{
+  position:fixed;
+  width:100%;
+  padding:28px 10%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  backdrop-filter:blur(14px);
+  background:rgba(11,11,11,0.75);
+  border-bottom:1px solid var(--accent-soft);
+  z-index:1000;
+}
+
+nav h1{
+  font-family:'Playfair Display', serif;
+  letter-spacing:4px;
+  font-size:18px;
+  color:var(--accent);
+}
+
+nav ul{
+  list-style:none;
+  display:flex;
+  gap:48px;
+}
+
+nav a{
+  text-decoration:none;
+  font-size:17px;
+  color:var(--text-primary);
+  position:relative;
+  transition:var(--transition-smooth);
+}
+
+nav a::after{
+  content:"";
+  position:absolute;
+  bottom:-6px;
+  left:0;
+  height:1px;
+  width:0%;
+  background:var(--accent);
+  transition:var(--transition-smooth);
+}
+
+nav a:hover{
+  color:var(--accent);
+}
+
+nav a:hover::after{
+  width:100%;
+}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:0 20px;
+}
+
+.hero img{
+  width:200px;
+  height:200px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--accent);
+  margin-bottom:40px;
+  transition:var(--transition-smooth);
+}
+
+.hero img:hover{
+  transform:scale(1.05);
+}
+
+.hero h2{
+  font-family:'Playfair Display', serif;
+  font-size:62px;
+  color:var(--accent);
+  margin-bottom:12px;
+}
+
+.hero p{
+  font-size:21px;
+  color:var(--text-muted);
+}
+
+/* SECTIONS */
+section{
+  padding:150px 10%;
+  opacity:0;
+  transform:translateY(60px);
+  transition:1.2s ease;
+}
+
+section.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.section-title{
+  font-family:'Playfair Display', serif;
+  font-size:42px;
+  color:var(--accent);
+  margin-bottom:70px;
+  position:relative;
+}
+
+.section-title::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-14px;
+  width:55px;
+  height:2px;
+  background:var(--accent);
+}
+
+/* GRIDS */
+.skills-grid,
+.project-grid{
+  display:grid;
+  gap:55px;
+}
+
+.skills-grid{
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+}
+
+.project-grid{
+  grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+}
+
+.skill-card,
+.project-card{
+  padding:55px;
+  border-radius:var(--radius-lg);
+  border:1px solid var(--accent-soft);
+  background:var(--bg-secondary);
+  transition:var(--transition-smooth);
+}
+
+.skill-card:hover,
+.project-card:hover{
+  transform:translateY(-12px);
+  border-color:var(--accent);
+}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:70px;
+  border-top:1px solid var(--accent-soft);
+  color:var(--text-muted);
+  font-size:15px;
+}
+
+/* CURSOR */
+.cursor,
+.cursor-trail{
+  position:fixed;
+  pointer-events:none;
+  border-radius:50%;
+  transform:translate3d(-50%, -50%, 0);
+  will-change:transform;
+  z-index:3000;
+}
+
+.cursor{
+  width:12px;
+  height:12px;
+  background:var(--accent);
+}
+
+.cursor-trail{
+  width:38px;
+  height:38px;
+  border:1px solid var(--accent-soft);
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .hero h2{font-size:42px;}
+  section{padding:110px 8%;}
+}
+
+</style>
+</head>
+<body>
+
+<div id="loader">KEVIN MARK</div>
+<div id="progress"></div>
+
+<div class="cursor"></div>
+<div class="cursor-trail"></div>
+
+<nav>
+  <h1>KEVIN MARK</h1>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Expertise</a></li>
+    <li><a href="#projects">Portfolio</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <img src="myphoto.jpeg" alt="Kevin Mark">
+  <h2>Kevin Mark</h2>
+  <p>Software Engineer • AI Architect • Digital Craftsman</p>
+</header>
+
+<section id="about">
+  <h2 class="section-title">About</h2>
+  <p>I design enduring digital systems built with discretion, precision, and timeless engineering philosophy.</p>
+</section>
+
+<section id="skills">
+  <h2 class="section-title">Expertise</h2>
+  <div class="skills-grid">
+    <div class="skill-card"><h3>HTML</h3></div>
+    <div class="skill-card"><h3>CSS</h3></div>
+    <div class="skill-card"><h3>JavaScript</h3></div>
+    <div class="skill-card"><h3>React</h3></div>
+  </div>
+</section>
+
+<section id="projects">
+  <h2 class="section-title">Selected Work</h2>
+  <div class="project-grid">
+    <div class="project-card">
+      <h3>Flight Reservation System</h3>
+      <p>Secure GUI-based booking system with structured booking flow.</p>
+    </div>
+    <div class="project-card">
+      <h3>AI Workout Intelligence</h3>
+      <p>Adaptive health analysis engine using rule-based AI logic.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <h2 class="section-title">Contact</h2>
+  <p>Email: kevin@example.com</p>
+</section>
+
+<footer>
+  © 2026 Kevin Mark. All Rights Reserved.
+</footer>
+
+<script>
+
+/* PRELOADER */
+window.addEventListener("load",()=>{
+  const loader = document.getElementById("loader");
+  setTimeout(()=>{
+    loader.style.opacity="0";
+    setTimeout(()=> loader.style.display="none",1400);
+  },800);
+});
+
+/* SCROLL PROGRESS */
+window.addEventListener("scroll",()=>{
+  const scrollTop = document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  document.getElementById("progress").style.width =
+    (scrollTop / height) * 100 + "%";
+});
+
+/* INTERSECTION OBSERVER (Better than scroll listener) */
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add("show");
+    }
+  });
+},{threshold:0.2});
+
+document.querySelectorAll("section").forEach(sec=>{
+  observer.observe(sec);
+});
+
+/* ULTRA SMOOTH SPRING CURSOR */
+const cursor = document.querySelector(".cursor");
+const trail = document.querySelector(".cursor-trail");
+
+let mouse = {x:window.innerWidth/2, y:window.innerHeight/2};
+let pos = {x:mouse.x, y:mouse.y};
+let vel = {x:0, y:0};
+
+const stiffness = 0.08;
+const damping = 0.90;
+
+document.addEventListener("mousemove",(e)=>{
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+
+function animate(){
+  let dx = mouse.x - pos.x;
+  let dy = mouse.y - pos.y;
+
+  vel.x += dx * stiffness;
+  vel.y += dy * stiffness;
+
+  vel.x *= damping;
+  vel.y *= damping;
+
+  pos.x += vel.x;
+  pos.y += vel.y;
+
+  cursor.style.transform =
+    `translate3d(${mouse.x}px, ${mouse.y}px, 0) translate(-50%, -50%)`;
+
+  trail.style.transform =
+    `translate3d(${pos.x}px, ${pos.y}px, 0) translate(-50%, -50%)`;
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+</script>
+
+</body>
+</html>
